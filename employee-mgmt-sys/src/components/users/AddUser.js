@@ -1,25 +1,30 @@
+import axios from "axios";
 import React, { useState } from "react";
 import { useNavigate } from 'react-router-dom';
-import userData from "../../users";
 
 const AddUser = () =>{
     const navigate = useNavigate();
     const [user, setUser] = useState({
         name:"",
-        username: "",
-        email:"",
-        phone:"",
-        website:""
+        number: "",
+        password:""
     })
 
     const onSubmit = async (e) =>{
         navigate('/home')
         e.preventDefault();
+        await axios.post(`http://localhost:3001/users`, {name:user.name, number:user.number, password:user.password})
+        .then((resp) =>{
+            setUser(resp.data)
+        })
+        .catch((err)=>{
+            alert(err)
+        })
+
         console.log(user)
-        userData.append(user)    
     }
 
-    const {name, username, email, phone, website} = user
+    const {name, number, password } = user
     const onInputChange = (e) =>{
         setUser({...user, [e.target.name]:e.target.value})
     }
@@ -43,9 +48,9 @@ const AddUser = () =>{
                         <input
                             type="text"
                             className="form-control form-control-lg"
-                            placeholder="Enter your Name"
-                            name="username"
-                            value={username}
+                            placeholder="Enter your Number"
+                            name="number"
+                            value={number}
                             onChange={e=>onInputChange(e)}
                         />
                     </div>
@@ -53,29 +58,9 @@ const AddUser = () =>{
                         <input
                             type="text"
                             className="form-control form-control-lg"
-                            placeholder="Enter your Email"
-                            name="email"
-                            value={email}
-                            onChange={e=>onInputChange(e)}
-                        />
-                    </div>
-                    <div className="form-group">
-                        <input
-                            type="text"
-                            className="form-control form-control-lg"
-                            placeholder="Enter your Phone Number"
-                            name="phone"
-                            value={phone}
-                            onChange={e=>onInputChange(e)}
-                        />
-                    </div>
-                    <div className="form-group">
-                        <input
-                            type="text"
-                            className="form-control form-control-lg"
-                            placeholder="Enter your websit name"
-                            name="website"
-                            value={website}
+                            placeholder="Enter your Password"
+                            name="password"
+                            value={password}
                             onChange={e=>onInputChange(e)}
                         />
                     </div>
