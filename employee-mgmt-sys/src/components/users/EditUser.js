@@ -1,25 +1,40 @@
+import axios from "axios";
 import React, {useEffect, useState } from "react";
 import { useNavigate, useParams } from 'react-router-dom';
 
 const EditUser = () =>{
     let navigate = useNavigate();
     const { id } = useParams();
-    console.log(id)
 
     const [user, setUser] = useState({
         name:"",
-        username: "",
-        email:"",
-        phone:"",
-        website:""
+        email: "",
+        number:""
     })
+
+    useEffect(()=>{
+        axios.get(`http://localhost:3001/user/${id}`)
+        .then((resp)=>{
+            setUser(resp.data)
+        })
+        .catch((err) =>{
+            alert(err)
+        })
+    },[])
 
     const onSubmit = async (e) =>{
         navigate('/home')
+        axios.patch(`http://localhost:3001/users/${id}`, {"name":user.name, number:user.number, email:user.email})
+        .then((resp)=>{
+            setUser(resp.data)
+        })
+        .catch((err)=>{
+            alert(err)
+        })
         e.preventDefault();
     }
 
-    const {name, username, email, phone, website} = user
+    const {name, number, email} = user
     const onInputChange = (e) =>{
         setUser({...user, [e.target.name]:e.target.value})
     }
@@ -43,16 +58,6 @@ const EditUser = () =>{
                         <input
                             type="text"
                             className="form-control form-control-lg"
-                            placeholder="Enter your Name"
-                            name="username"
-                            value={username}
-                            onChange={e=>onInputChange(e)}
-                        />
-                    </div>
-                    <div className="form-group">
-                        <input
-                            type="text"
-                            className="form-control form-control-lg"
                             placeholder="Enter your Email"
                             name="email"
                             value={email}
@@ -63,19 +68,9 @@ const EditUser = () =>{
                         <input
                             type="text"
                             className="form-control form-control-lg"
-                            placeholder="Enter your Phone Number"
-                            name="phone"
-                            value={phone}
-                            onChange={e=>onInputChange(e)}
-                        />
-                    </div>
-                    <div className="form-group">
-                        <input
-                            type="text"
-                            className="form-control form-control-lg"
-                            placeholder="Enter your websit name"
-                            name="website"
-                            value={website}
+                            placeholder="Enter your number"
+                            name="number"
+                            value={number}
                             onChange={e=>onInputChange(e)}
                         />
                     </div>
