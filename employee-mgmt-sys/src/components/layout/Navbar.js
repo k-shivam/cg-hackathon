@@ -1,7 +1,14 @@
 import React from 'react';
-import { Link, NavLink } from 'react-router-dom';
+import { Link, NavLink, useNavigate } from 'react-router-dom';
 
 const Navbar = () => {
+  const {user} = localStorage || {};
+  const navigate = useNavigate();
+
+  const handleSignOut = () =>{
+    delete localStorage.user
+  }
+
   return (
     <nav className="navbar navbar-expand-lg navbar-dark bg-primary">
         <div className="container-fluid">
@@ -10,19 +17,22 @@ const Navbar = () => {
             <span className="navbar-toggler-icon" />
           </button>
           <div className="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul className="navbar-nav me-auto mb-2 mb-lg-0">
+            {user ? <ul className="navbar-nav me-auto mb-2 mb-lg-0">
               <li className="nav-item">
-                <NavLink className="nav-link" to="home">Home</NavLink>
+                <NavLink className="nav-link" to="/home">Home</NavLink>
               </li>
               <li className="nav-item">
-              <NavLink className="nav-link" to="about">About</NavLink>
+              <NavLink className="nav-link" to="/about">About</NavLink>
               </li>
               <li className="nav-item">
-              <NavLink className="nav-link" to="contact">Contact</NavLink>
+              <NavLink className="nav-link" to="/contact">Contact</NavLink>
               </li>
-            </ul>
+            </ul>:null}
           </div>
-          <Link className='btn btn-outline-light w-25' to="/user/add">Add Users</Link>
+          {!user ? <Link className='btn btn-outline-light w-25' to="/login" >Sign In</Link>: null}
+          {!user ? <Link className='btn btn-outline-light w-25' to="/register" >Register</Link>: null}
+          {user ? <Link className='btn btn-outline-light w-25' to="/login" onClick={handleSignOut}>Sign Out</Link>: null}
+          {user ? <Link className='btn btn-outline-light w-25' to="/user/add">Add Users</Link>:null}
         </div>
       </nav>
   );
